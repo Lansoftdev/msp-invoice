@@ -1,0 +1,99 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: autoupdate-data
+spec:
+  schedule: "*/30 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: clickhouse-client
+              image: 'yandex/clickhouse-client:latest'
+              imagePullPolicy: IfNotPresent
+              args: 
+              - '--host'
+              - 'clickhouse'
+              - '--multiline'
+              - '--multiquery'
+              - '--query'
+              - >
+                  CREATE TABLE IF NOT EXISTS view_kaseya_status_agent
+                  (
+                    AgentType      Int32,
+                    LastPatchScan  DateTime,
+                    ExecScriptTime DateTime,
+                    RunCount Int32,
+                    MonthPeriod Int32,
+                    ExecPeriod Int32,
+                    RunAtTime Int32,
+                    NextPatchScan Int32,
+                    NextRunTime String,
+                    ScheduledScanScriptId Int32,
+                    ScheduledScanScriptSchedType Int32,
+                    ScanRunAtTime Int32,
+                    ScanNextRunTime DateTime,
+                    NewPatchAlert Int32,
+                    PatchFailedAlert Int32,
+                    InvalidCredentialAlert Int32,
+                    WINAUChangedAlert Int32,
+                    AlertEmail String,
+                    SourceMachineGuid String,
+                    LanCacheName String,
+                    PreRebootScriptName String,
+                    PostRebootScriptName String,
+                    ScanResultsPending String,
+                    Reset Int32,
+                    RbWarn String,
+                    RebootDay String,
+                    RebootTime String,
+                    NoRebootEmail String,
+                    SourceType Int32,
+                    SourcePath String,
+                    SourceLocal String,
+                    DestUseAgentDrive Int32,
+                    UseInternetSrcFallback Int32,
+                    WinAutoUpdateStatus String,
+                    PatchScanRecurrence String,
+                    Attributes Int32,
+                    AgentId String
+                  ) ENGINE=URL('http://kaseya-proxy:8090/assetmgmt/patch/status', JSONEachRow);
+
+                  CREATE OR REPLACE TABLE agents ENGINE = MergeTree ORDER BY tuple() as SELECT * FROM view_kaseya_status_agent;
+
+                  CREATE TABLE IF NOT EXISTS view_kaseya_history_agent
+                  (
+                    PatchDataId Int32,
+                    UpdateClassification Int32,
+                    UpdateCategory Int32,
+                    KBArticleId String,
+                    KBArticleLink String,
+                    SecurityBulletinId String,
+                    SecurityBulletinLink String,
+                    UpdateTitle String,
+                    LastPublishedDate String,
+                    LocationPending Int32,
+                    LocationId Int32,
+                    BulletinId String,
+                    PatchState Int32,
+                    InstallDate String,
+                    Ignore Int32,
+                    ProductId Int32,
+                    ApprovalStatus Int32,
+                    Location String,
+                    WuaOverrideFlag Int32,
+                    Switches String,
+                    ProductName String,
+                    IsSuperseded UInt8,
+                    WuaProductId Int32,
+                    TestStatus Int32,
+                    IsKServerAgent UInt8,
+                    IsDbServer UInt8,
+                    NextRunTime String,
+                    Attributes Int32,
+                    AgentId String
+                  ) ENGINE=URL('http://kaseya-proxy:8090/assetmgmt/patch/history?accept=jsonl', JSONEachRow);
+
+                  CREATE OR REPLACE TABLE patch_history ENGINE = MergeTree ORDER BY tuple() as SELECT * FROM view_kaseya_history_agent;
+          restartPolicy: OnFailure
