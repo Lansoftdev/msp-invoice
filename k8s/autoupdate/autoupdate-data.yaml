@@ -60,7 +60,7 @@ spec:
                     AgentId String
                   ) ENGINE=URL('http://kaseya-proxy:8090/assetmgmt/patch/status', JSONEachRow);
 
-                  CREATE OR REPLACE TABLE agents ENGINE = MergeTree ORDER BY tuple() as SELECT * FROM view_kaseya_status_agent;
+                  CREATE OR REPLACE TABLE patch_status ENGINE = MergeTree ORDER BY tuple() as SELECT * FROM view_kaseya_status_agent;
 
                   CREATE TABLE IF NOT EXISTS view_kaseya_history_agent
                   (
@@ -96,4 +96,57 @@ spec:
                   ) ENGINE=URL('http://kaseya-proxy:8090/assetmgmt/patch/history?accept=jsonl', JSONEachRow);
 
                   CREATE OR REPLACE TABLE patch_history ENGINE = MergeTree ORDER BY tuple() as SELECT * FROM view_kaseya_history_agent;
+
+                  Set allow_experimental_bigint_types = 1;
+                  
+                  CREATE TABLE IF NOT EXISTS view_kaseya_agents 
+                  (
+                    AgentId UInt64,
+                    AgentName String,
+                    Online Int32,
+                    OSType String,
+                    OSInfo String,
+                    OrgId Int128,
+                    MachineGroupId Int128,
+                    MachineGroup String,
+                    ComputerName String,
+                    IPv6Address String,
+                    IPAddress String,
+                    OperatingSystem String,
+                    OSVersion String,
+                    LastLoggedInUser String,
+                    LastRebootTime String,
+                    LastCheckInTime String,
+                    Country String,
+                    CurrentUser String,
+                    Contact String,
+                    TimeZone String,
+                    RamMBytes Int32,
+                    CpuCount Int32,
+                    CpuSpeed Int32,
+                    CpuType String,
+                    DomainWorkgroup String,
+                    AgentFlags Int32,
+                    AgentVersion Int32,
+                    ToolTipNotes String,
+                    ShowToolTip Int32,
+                    DefaultGateway String,
+                    DNSServer1 String,
+                    DNSServer2 String,
+                    DHCPServer String,
+                    PrimaryWINS String,
+                    SecondaryWINS String,
+                    ConnectionGatewayIP String,
+                    FirstCheckIn String,
+                    PrimaryKServer String,
+                    SecondaryKServer String,
+                    CreationDate String,
+                    OneClickAccess UInt8,
+                    AdminContact String,
+                    SystemSerialNumber String,
+                    ContactPhone String,
+                    ContactEmail String,
+                    Attributes Int32
+                  ) ENGINE = URL('http://kaseya-proxy:8090/api/v1.0/assetmgmt/agents',JSONEachRow);
+                  CREATE OR REPLACE TABLE agents ENGINE = MergeTree ORDER BY tuple() as SELECT * FROM view_kaseya_agents;
           restartPolicy: OnFailure
