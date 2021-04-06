@@ -60,7 +60,7 @@ spec:
             type: DirectoryOrCreate
       containers:
         - name: metabase
-          image: 'slesh/metabase'
+          image: 'lansoftdev/metabase'
           imagePullPolicy: Always
           ports:
             - name: web
