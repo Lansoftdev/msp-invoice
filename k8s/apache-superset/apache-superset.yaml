@@ -60,7 +60,7 @@ spec:
             type: DirectoryOrCreate
       containers:
         - name: apache-superset
-          image: 'slesh/apache-superset-clickhouse'
+          image: 'lansoftdev/apache-superset-clickhouse'
           imagePullPolicy: Always
           ports:
             - name: web
