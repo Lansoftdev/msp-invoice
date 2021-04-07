@@ -1,4 +1,4 @@
-FROM slesh/apache-superset:latest
+FROM apache/superset
 # Switching to root to install the required packages
 USER root
 RUN pip uninstall infi.clickhouse_orm \
