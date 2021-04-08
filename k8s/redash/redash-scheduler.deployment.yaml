@@ -27,7 +27,7 @@ spec:
         tier: backend
     spec:
       containers:
-        - image: slesh/redash_scheduler
+        - image: lansoftdev/redash_scheduler
           name: redashscheduler       
           args:
             - dev_scheduler
