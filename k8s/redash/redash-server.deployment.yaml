@@ -60,7 +60,7 @@ spec:
             - name: REDASH_DATABASE_URL
               value: postgresql://postgres@redashpostgres:5432/postgres            
       containers: 
-        - image: slesh/redash_server
+        - image: lansoftdev/redash_server
           imagePullPolicy: Always
           name: redashserver
           ports:
