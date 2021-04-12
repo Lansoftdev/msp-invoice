@@ -36,11 +36,20 @@ spec:
           image: quay.io/keycloak/keycloak:12.0.4
           env:
             - name: KEYCLOAK_USER
-              value: "admin"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-user
+                  key:  KEYCLOAK_USER 
             - name: KEYCLOAK_PASSWORD
-              value: "admin"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-user
+                  key:  KEYCLOAK_PASSWORD
             - name: PROXY_ADDRESS_FORWARDING
-              value: "true"
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-user
+                  key:  PROXY_ADDRESS_FORWARDING
           ports:
             - name: http
               containerPort: 8080
