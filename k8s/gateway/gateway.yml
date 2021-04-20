@@ -33,9 +33,22 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: 'smaks/gateway:0.0.4'
+          image: 'smaks/gateway:0.0.5'
           imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8098
               protocol: TCP
+          env: 
+            - name: CLICKHOUSE_URL
+              clickhouse:
+                url: jdbc:clickhouse://localhost:8123/default
+            - name: CLICKHOUSE_USER
+              clickhouse:
+                user: default
+            - name: CLICKHOUSE_PASSWORD
+              clickhouse:
+                password:
+            - name: CLICKHOUSE_COMTRESS
+              clickhouse:
+                comtress: true
