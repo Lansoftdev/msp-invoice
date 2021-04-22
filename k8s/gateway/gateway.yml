@@ -9,7 +9,7 @@ spec:
     - name: http
       port: 8098
       targetPort: 8098
-      nodePort: 30007
+      nodePort: 30009
   selector:
     app: gateway
   type: LoadBalancer
@@ -33,22 +33,32 @@ spec:
     spec:
       containers:
         - name: gateway
-          image: 'smaks/gateway:0.0.5'
+          image: 'smaks/gateway:0.0.2'
           imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8098
               protocol: TCP
           env: 
-            - name: CLICKHOUSE_URL
-              clickhouse:
-                url: jdbc:clickhouse://localhost:8123/default
-            - name: CLICKHOUSE_USER
-              clickhouse:
-                user: default
-            - name: CLICKHOUSE_PASSWORD
-              clickhouse:
-                password:
-            - name: CLICKHOUSE_COMTRESS
-              clickhouse:
-                comtress: true
+            - name: DBCLICKHOUSE_URL
+              value: jdbc:clickhouse://clickhouse:8123/default
+            - name: DBCLICKHOUSE_USER
+              value: default
+            - name: DBCLICKHOUSE_PASSWORD
+              value:
+            - name: DBCLICKHOUSE_COMTRESS
+              value: 'true'
+            - name: KEYCLOAK_AUTHSERVERUML
+              value: http://172.28.128.3:30008/auth/
+            - name: KEYCLOAK_REALM
+              value: msp
+            - name: KEYCLOAK_RESOURCE
+              value: gateway
+            - name: KEYCLOAK_SSLREQUIRED
+              value: external
+            - name: KEYCLOAK_CREDENTIALS_SECRET
+              value: 'admin'
+            - name: KEYCLOAK_CONFIDENTIALPORT
+              value: '0'
+            - name: KEYCLOAK_EXPOSETOKEN
+              value: 'true'
