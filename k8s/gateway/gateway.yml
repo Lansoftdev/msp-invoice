@@ -4,32 +4,43 @@ metadata:
   name: gateway
   labels:
     app: gateway
+    env: dev
+    tier: backend
 spec:
+  type: NodePort
   ports:
     - name: http
       port: 8098
       targetPort: 8098
       nodePort: 30009
   selector:
+    project: msp-invoice
     app: gateway
-  type: LoadBalancer
+    env: dev
+    tier: backend
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gateway
-  namespace: default
   labels:
     app: gateway
+    env: dev
+    tier: backend
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: gateway
+      env: dev
+      tier: backend
   template:
     metadata:
       labels:
+        project: msp-invoice
         app: gateway
+        env: dev
+        tier: backend
     spec:
       containers:
         - name: gateway
@@ -39,7 +50,7 @@ spec:
             - name: http
               containerPort: 8098
               protocol: TCP
-          env: 
+          env:
             - name: DB_CLICKHOUSE_URL
               value: jdbc:clickhouse://clickhouse:8123/default
             - name: DB_CLICKHOUSE_USER
