@@ -68,7 +68,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 80, host: 9999, host_ip: "127.0.0.1"
   config.vm.network "forwarded_port", guest: 6443, host: 6443, host_ip: "127.0.0.1"
   config.vm.network "forwarded_port", guest: 8001, host: 8001, host_ip: "127.0.0.1"
-  for port in 30001..30010
+  for port in 30001..30015
     config.vm.network "forwarded_port", guest: port, host: port, host_ip: "127.0.0.1"
   end
 
